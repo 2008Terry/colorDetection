@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+
 """Robust soccer-field line detector (v2).
 
 This version is designed for difficult images (fisheye, uneven lighting, low contrast),
 and can detect lines that appear bright, dark, or both.
+
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+
 
 
 def parse_args() -> argparse.Namespace:
@@ -151,10 +154,12 @@ def keep_line_like_components(mask: np.ndarray) -> np.ndarray:
 
 def extract_lines(binary_mask: np.ndarray, min_line_length: int, max_line_gap: int) -> np.ndarray:
     edges = cv2.Canny(binary_mask, 40, 125)
+
     lines = cv2.HoughLinesP(
         edges,
         rho=1,
         theta=np.pi / 180,
+
         threshold=35,
         minLineLength=min_line_length,
         maxLineGap=max_line_gap,
@@ -179,6 +184,7 @@ def make_overlay(image: np.ndarray, mask: np.ndarray, color=(0, 0, 255)) -> np.n
 
 def main() -> None:
     args = parse_args()
+
     input_path = Path(args.input)
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -218,6 +224,7 @@ def main() -> None:
         "07_overlay.png",
     ]:
         print(" -", outdir / name)
+
 
 
 if __name__ == "__main__":
